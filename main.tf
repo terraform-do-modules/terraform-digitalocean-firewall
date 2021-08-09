@@ -8,8 +8,8 @@
 #              tags for resources. You can use terraform-labels to implement a strict
 #              naming convention.
 module "labels" {
-  source = "git::https://github.com/terraform-do-modules/terraform-digitalocean-labels.git?ref=0.15"
-  #version     = "0.15.0"
+  source      = "terraform-do-modules/labels/digitalocean"
+  version     = "0.15.0"
   name        = var.name
   environment = var.environment
   label_order = var.label_order

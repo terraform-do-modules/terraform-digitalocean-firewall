@@ -72,7 +72,7 @@ This module has a few dependencies:
 Here is an example of how you can use this module in your inventory structure:
 ```hcl
      module "firewall" {
-     source          = "clouddrove/firewall/digitalocean"
+     source          = "terraform-do-modules/firewall/digitalocean"
      version         = "0.15.0"
      name            = "firewall"
      environment     = "test"

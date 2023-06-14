@@ -25,7 +25,7 @@ module "droplet" {
   vpc_uuid           = module.vpc.id
   droplet_size       = "s-1vcpu-1gb"
   image_name         = "ubuntu-18-04-x64"
-  ssh_key            = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCbnaeXI+pAfwoMBLDl2r+fsRrBoqgRY54gcAawz0XJOiG6esHa13r28GGuEyAm5UGhDkVm6PZ8JAmLNpe8BTjJzF3BEZb+MMf0YLG+Gz6V5uyz9efuKxZqNTk2El36y5Z2dDUyrcT6FdayhRGtJPfUJc22tgucaTwA0I41SVJDb6OPeSYFalWIHk953RePWnJAjpRKyRqjnkbn6VUCqVQSNdJ+C4Qs7Zydullusm45UOMjhi20dgttdnnz6y9AOJDLws5IVmiee+Qwt1jO86RYSGyN2ikJQa6zB7Si1b8hlrVvDkBVGSxKs2mMJuLjXSx/SqdcwW17CDZLQoJ03WJgW3vs2sriyrtsFxWHCjssidl0sF83qVvUEsJKyNo7A6cXTAC++n2HlmWiDFpAns7qCrMkBJPOIT3hKDROozU+sLH8AL/mNd4yGpdTKDQGf+nDWq/5EGkHO4aq9RW9gQbGCX6H/zQTYudaDKLoVGf5LkYWtOC8+wfWmf2/dUA1KDU= devops"
+  ssh_key            = "ssh-rsaEl36y5Z2dDUyrcT6FdayhRGtJPfUJc22tgu= test"
   monitoring         = false
   ipv6               = false
   floating_ip        = true

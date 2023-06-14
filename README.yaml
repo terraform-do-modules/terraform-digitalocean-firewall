@@ -11,7 +11,7 @@ name : Terraform DigitalOcean Firewall
 license: "MIT"
 
 # Canonical GitHub repo
-github_repo: clouddrove/terraform-digitalocean-firewall
+github_repo: terraform-do-modules/terraform-digitalocean-firewall
 
 # Badges to display
 badges:
@@ -38,10 +38,8 @@ usage : |-
        module "firewall" {
        source          = "terraform-do-modules/firewall/digitalocean"
        version         = "0.15.0"
-       name            = "firewall"
+       name            = "app"
        environment     = "test"
-       label_order     = ["environment", "name"]
-       enable_firewall = true
        allowed_ip      = ["0.0.0.0/0"]
        allowed_ports   = [22, 80]
        droplet_ids     = module.droplet.id

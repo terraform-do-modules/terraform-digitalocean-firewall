@@ -15,20 +15,20 @@ variable "environment" {
 
 variable "label_order" {
   type        = list(any)
-  default     = []
+  default     = ["name", "environment"]
   description = "Label order, e.g. `name`,`application`."
 }
 
-variable "delimiter" {
+variable "managedby" {
   type        = string
-  default     = "-"
-  description = "Delimiter to be used between `organization`, `environment`, `name` and `attributes`."
+  default     = "terraform-do-modules"
+  description = "ManagedBy, eg 'terraform-do-modules' or 'hello@clouddrove.com'"
 }
 
-variable "enable_firewall" {
+variable "enabled" {
   type        = bool
   default     = true
-  description = "Enable default Security Group with only Egress traffic allowed."
+  description = "Flag to control the firewall creation."
 }
 
 variable "allowed_ip" {

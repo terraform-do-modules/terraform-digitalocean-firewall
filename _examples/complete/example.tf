@@ -1,5 +1,9 @@
-provider "digitalocean" {
-  #  token = ""
+provider "digitalocean" {}
+
+locals {
+  name        = "app"
+  environment = "test"
+  region      = "blr1"
 }
 
 ##------------------------------------------------
@@ -7,9 +11,9 @@ provider "digitalocean" {
 ##------------------------------------------------
 module "vpc" {
   source      = "git::https://github.com/terraform-do-modules/terraform-digitalocean-vpc.git?ref=internal-423"
-  name        = "app"
-  environment = "test"
-  region      = "blr1"
+  name        = local.name
+  environment = local.environment
+  region      = local.region
   ip_range    = "10.10.0.0/16"
 }
 
@@ -17,24 +21,20 @@ module "vpc" {
 ## Droplet module call
 ##------------------------------------------------
 module "droplet" {
-  source             = "git::https://github.com/terraform-do-modules/terraform-digitalocean-droplet.git?ref=internal-425"
-  name               = "app"
-  environment        = "test"
-  droplet_count      = 1
-  region             = "blr1"
-  vpc_uuid           = module.vpc.id
-  droplet_size       = "s-1vcpu-1gb"
-  image_name         = "ubuntu-18-04-x64"
-  ssh_key            = "ssh-rsaEl36y5Z2dDUyrcT6FdayhRGtJPfUJc22tgu= test"
-  monitoring         = false
-  ipv6               = false
-  floating_ip        = true
-  block_storage_size = 5
-  user_data          = file("user-data.sh")
-
+  source      = "git::https://github.com/terraform-do-modules/terraform-digitalocean-droplet.git?ref=internal-425"
+  name        = local.name
+  environment = local.environment
+  region      = local.region
+  vpc_uuid    = module.vpc.id
+  ssh_key     = "ssh-rsaEl36y5Z2dDUyrcT6FdayhRGtJPfUJfc22tgu= test"
+  user_data   = file("user-data.sh")
   ####firewall
-  allowed_ip    = ["10.10.0.0/16"]
-  allowed_ports = [22, 80]
+  inbound_rules = [
+    {
+      allowed_ip    = ["10.10.0.0/16"]
+      allowed_ports = "22"
+    },
+  ]
 }
 
 ##------------------------------------------------
@@ -42,9 +42,9 @@ module "droplet" {
 ##------------------------------------------------
 module "firewall" {
   source        = "./../../"
-  name          = "app"
-  environment   = "test"
+  name          = local.name
+  environment   = local.environment
   allowed_ip    = ["0.0.0.0/0"]
-  allowed_ports = [22, 80]
+  allowed_ports = [80, 443]
   droplet_ids   = module.droplet.id
 }

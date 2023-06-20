@@ -54,3 +54,33 @@ variable "droplet_ids" {
   default     = []
   description = "The ID of the VPC that the instance security group belongs to."
 }
+
+variable "load_balancer_uids" {
+  type        = list(any)
+  default     = []
+  description = "The ID of the VPC that the load_balancer security group belongs to."
+}
+
+variable "kubernetes_ids" {
+  type        = list(any)
+  default     = []
+  description = "The ID of the VPC that the kubernetes security group belongs to."
+}
+
+variable "tags" {
+  type        = list(any)
+  default     = []
+  description = "An array containing the names of Tags corresponding to groups of Droplets from which the inbound traffic will be accepted."
+}
+
+variable "database_cluster_id" {
+  type        = string
+  default     = null
+  description = "The ID of the target database cluster."
+}
+
+variable "rules" {
+  type        = any
+  default     = []
+  description = "List of objects that represent the configuration of each inbound rule."
+}

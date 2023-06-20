@@ -52,11 +52,12 @@ usage : |-
   Here is an example of how you can use this module in your inventory structure:
   ```hcl
        module "firewall" {
-       source             = "terraform-do-modules/firewall/digitalocean"
-       version            = "0.15.0"
-       name                = local.name
-       environment         = local.environment
-       database_cluster_id = ""
+       source                     = "terraform-do-modules/firewall/digitalocean"
+       version                    = "0.15.0"
+       name                       = local.name
+       environment                = local.environment
+       database_firewall_enabled  = true
+       database_cluster_id        = ""
        rules = [
           {
             type  = "ip_addr"

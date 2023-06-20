@@ -13,10 +13,10 @@ module "labels" {
 #Description :  Provides a DigitalOcean Cloud Firewall resource. This can be used to create, modify, and delete Firewalls.
 ##-------------------------------------------------------------------------------------------------------------------------
 
-#tfsec:ignore:digitalocean-compute-no-public-ingress   ## because by default we use ["0.0.0.0/0"], do not use on prod env.
-#tfsec:ignore:digitalocean-compute-no-public-egress    ## The port is exposed for ingress from the internet, by default we use  ["0.0.0.0/0", "::/0"].
+#tfsec:ignore:digitalocean-compute-no-public-ingress   ## The port is exposed for ingress from the internet, by default  ["0.0.0.0/0", "::/0"] we use for http and https.
+#tfsec:ignore:digitalocean-compute-no-public-egress    ## because by default we use ["0.0.0.0/0"], do not use on prod env.
 resource "digitalocean_firewall" "default" {
-  count       = var.enabled == true ? 1 : 0
+  count       = var.enabled == true && var.database_cluster_id == null ? 1 : 0
   name        = format("%s-firewall", module.labels.id)
   droplet_ids = var.droplet_ids
   dynamic "inbound_rule" {

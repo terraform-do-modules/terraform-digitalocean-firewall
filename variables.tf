@@ -31,6 +31,12 @@ variable "enabled" {
   description = "Flag to control the firewall creation."
 }
 
+variable "database_firewall_enabled" {
+  type        = bool
+  default     = false
+  description = "Flag to control the firewall creation."
+}
+
 variable "allowed_ip" {
   type        = list(any)
   default     = []

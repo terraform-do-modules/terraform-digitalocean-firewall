@@ -9,11 +9,10 @@ locals {
 ## database Firewall module call
 ##------------------------------------------------
 module "firewall" {
-  source                    = "./../../"
-  name                      = local.name
-  environment               = local.environment
-  database_firewall_enabled = true
-  database_cluster_id       = "" ## add database cluster id
+  source              = "./../../"
+  name                = local.name
+  environment         = local.environment
+  database_cluster_id = "" ## add database cluster id
   rules = [
     {
       type  = "ip_addr"

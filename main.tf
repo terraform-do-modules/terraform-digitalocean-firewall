@@ -64,7 +64,7 @@ resource "digitalocean_firewall" "default" {
 #Description : Provides a DigitalOcean database firewall resource allowing you to restrict connections to your database to trusted sources.
 ##------------------------------------------------------------------------------------------------------------------------------------------
 resource "digitalocean_database_firewall" "default" {
-  count = var.enabled == true && var.database_firewall_enabled && var.database_cluster_id != null ? 1 : 0
+  count = var.enabled == true && var.database_cluster_id != null ? 1 : 0
 
   cluster_id = var.database_cluster_id
 

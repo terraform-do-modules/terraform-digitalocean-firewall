@@ -37,7 +37,7 @@ usage : |-
   ```hcl
        module "firewall" {
        source             = "terraform-do-modules/firewall/digitalocean"
-       version            = "0.15.0"
+       version            = "1.0.0"
        name               = "app"
        environment        = "test"
        allowed_ip         = ["0.0.0.0/0"]
@@ -53,7 +53,7 @@ usage : |-
   ```hcl
        module "firewall" {
        source                     = "terraform-do-modules/firewall/digitalocean"
-       version                    = "0.15.0"
+       version                    = "1.0.0"
        name                       = local.name
        environment                = local.environment
        database_firewall_enabled  = true

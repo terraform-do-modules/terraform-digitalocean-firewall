@@ -8,16 +8,6 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "daily"
-    open-pull-requests-limit: 3
-    assignees:
-      - "clouddrove-ci"
-    reviewers:
-      - "approvers"
-
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
       interval: "weekly"
     open-pull-requests-limit: 3
     assignees:
@@ -65,7 +55,7 @@ updates:
     open-pull-requests-limit: 3
 
   - package-ecosystem: "terraform" # See documentation for possible values
-    directory: "/_examples/database_firewall" # Location of package manifests
+    directory: "/_examples/database-firewall" # Location of package manifests
     schedule:
       interval: "weekly"
     # Add assignees

@@ -2,7 +2,8 @@
 ## Labels module callled that will be used for naming and tags.
 ##-----------------------------------------------------------------------------
 module "labels" {
-  source      = "git::https://github.com/terraform-do-modules/terraform-digitalocean-labels.git?ref=internal-426m"
+  source      = "terraform-do-modules/labels/digitalocean"
+  version     = "1.0.0"
   name        = var.name
   environment = var.environment
   managedby   = var.managedby
@@ -32,25 +33,17 @@ resource "digitalocean_firewall" "default" {
       source_tags               = var.tags
     }
   }
-
-  outbound_rule {
-    protocol                       = "tcp"
-    port_range                     = "1-65535"
-    destination_addresses          = ["0.0.0.0/0", "::/0"]
-    destination_droplet_ids        = var.droplet_ids
-    destination_kubernetes_ids     = var.kubernetes_ids
-    destination_load_balancer_uids = var.load_balancer_uids
-    destination_tags               = var.tags
-  }
-
-  outbound_rule {
-    protocol                       = "udp"
-    port_range                     = "1-65535"
-    destination_addresses          = ["0.0.0.0/0", "::/0"]
-    destination_droplet_ids        = var.droplet_ids
-    destination_kubernetes_ids     = var.kubernetes_ids
-    destination_load_balancer_uids = var.load_balancer_uids
-    destination_tags               = var.tags
+  dynamic "outbound_rule" {
+    for_each = var.outbound_rule
+    content {
+      protocol                       = outbound_rule.value.protocol
+      port_range                     = outbound_rule.value.port_range
+      destination_addresses          = outbound_rule.value.destination_addresses
+      destination_droplet_ids        = var.droplet_ids
+      destination_kubernetes_ids     = var.kubernetes_ids
+      destination_load_balancer_uids = var.load_balancer_uids
+      destination_tags               = var.tags
+    }
   }
 
   tags = [
@@ -64,10 +57,8 @@ resource "digitalocean_firewall" "default" {
 #Description : Provides a DigitalOcean database firewall resource allowing you to restrict connections to your database to trusted sources.
 ##------------------------------------------------------------------------------------------------------------------------------------------
 resource "digitalocean_database_firewall" "default" {
-  count = var.enabled == true && var.database_cluster_id != null ? 1 : 0
-
+  count      = var.enabled == true && var.database_cluster_id != null ? 1 : 0
   cluster_id = var.database_cluster_id
-
   dynamic "rule" {
     for_each = var.rules
     content {

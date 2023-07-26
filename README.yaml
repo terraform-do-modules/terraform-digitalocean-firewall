@@ -8,10 +8,10 @@
 name : Terraform DigitalOcean Firewall
 
 # License of this project
-license: "MIT"
+license: "APACHE"
 
 # Canonical GitHub repo
-github_repo: clouddrove/terraform-digitalocean-firewall
+github_repo: terraform-do-modules/terraform-digitalocean-firewall
 
 # Badges to display
 badges:
@@ -19,7 +19,7 @@ badges:
     image: "https://img.shields.io/badge/Terraform-v0.15-green"
     url: "https://www.terraform.io"
   - name: "Licence"
-    image: "https://img.shields.io/badge/License-MIT-blue.svg"
+    image: "https://img.shields.io/badge/License-APACHE-blue.svg"
     url: "LICENSE.md"
 
 #  description of this project
@@ -36,14 +36,33 @@ usage : |-
   Here is an example of how you can use this module in your inventory structure:
   ```hcl
        module "firewall" {
-       source          = "terraform-do-modules/firewall/digitalocean"
-       version         = "0.15.0"
-       name            = "firewall"
-       environment     = "test"
-       label_order     = ["environment", "name"]
-       enable_firewall = true
-       allowed_ip      = ["0.0.0.0/0"]
-       allowed_ports   = [22, 80]
-       droplet_ids     = module.droplet.id
+       source             = "terraform-do-modules/firewall/digitalocean"
+       version            = "1.0.0"
+       name               = "app"
+       environment        = "test"
+       allowed_ip         = ["0.0.0.0/0"]
+       allowed_ports      = [22, 80]
+       droplet_ids        = []
+       kubernetes_ids     = []
+       load_balancer_uids = []
+       }
+  ```
+
+  ### databases firewall Example
+  Here is an example of how you can use this module in your inventory structure:
+  ```hcl
+       module "firewall" {
+       source                     = "terraform-do-modules/firewall/digitalocean"
+       version                    = "1.0.0"
+       name                       = local.name
+       environment                = local.environment
+       database_firewall_enabled  = true
+       database_cluster_id        = ""
+       rules = [
+          {
+            type  = "ip_addr"
+            value = "192.168.1.1"
+          },
+        ]
        }
   ```

@@ -6,7 +6,6 @@ variable "name" {
   description = "Name  (e.g. `app` or `cluster`)."
 }
 
-
 variable "environment" {
   type        = string
   default     = ""
@@ -15,20 +14,20 @@ variable "environment" {
 
 variable "label_order" {
   type        = list(any)
-  default     = []
+  default     = ["name", "environment"]
   description = "Label order, e.g. `name`,`application`."
 }
 
-variable "delimiter" {
+variable "managedby" {
   type        = string
-  default     = "-"
-  description = "Delimiter to be used between `organization`, `environment`, `name` and `attributes`."
+  default     = "terraform-do-modules"
+  description = "ManagedBy, eg 'terraform-do-modules' or 'hello@clouddrove.com'"
 }
 
-variable "enable_firewall" {
+variable "enabled" {
   type        = bool
   default     = true
-  description = "Enable default Security Group with only Egress traffic allowed."
+  description = "Flag to control the firewall creation."
 }
 
 variable "allowed_ip" {
@@ -53,4 +52,60 @@ variable "droplet_ids" {
   type        = list(any)
   default     = []
   description = "The ID of the VPC that the instance security group belongs to."
+}
+
+variable "load_balancer_uids" {
+  type        = list(any)
+  default     = []
+  description = "The ID of the VPC that the load_balancer security group belongs to."
+}
+
+variable "kubernetes_ids" {
+  type        = list(any)
+  default     = []
+  description = "The ID of the VPC that the kubernetes security group belongs to."
+}
+
+variable "tags" {
+  type        = list(any)
+  default     = []
+  description = "An array containing the names of Tags corresponding to groups of Droplets from which the inbound traffic will be accepted."
+}
+
+variable "database_cluster_id" {
+  type        = string
+  default     = null
+  description = "The ID of the target database cluster."
+}
+
+variable "rules" {
+  type        = any
+  default     = []
+  description = "List of objects that represent the configuration of each inbound rule."
+}
+
+variable "outbound_rule" {
+  type = list(object({
+    protocol              = string
+    port_range            = string
+    destination_addresses = list(string)
+  }))
+  default = [
+    {
+      protocol   = "tcp"
+      port_range = "1-65535"
+      destination_addresses = [
+        "0.0.0.0/0",
+      "::/0"]
+      destination_droplet_ids = []
+    },
+    {
+      protocol   = "udp"
+      port_range = "1-65535"
+      destination_addresses = [
+        "0.0.0.0/0",
+      "::/0"]
+    }
+  ]
+  description = "List of objects that represent the configuration of each outbound rule."
 }

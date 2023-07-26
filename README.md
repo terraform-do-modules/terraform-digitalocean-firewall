@@ -17,20 +17,20 @@
   <img src="https://img.shields.io/badge/Terraform-v0.15-green" alt="Terraform">
 </a>
 <a href="LICENSE.md">
-  <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="Licence">
+  <img src="https://img.shields.io/badge/License-APACHE-blue.svg" alt="Licence">
 </a>
 
 
 </p>
 <p align="center">
 
-<a href='https://facebook.com/sharer/sharer.php?u=https://github.com/clouddrove/terraform-digitalocean-firewall'>
+<a href='https://facebook.com/sharer/sharer.php?u=https://github.com/terraform-do-modules/terraform-digitalocean-firewall'>
   <img title="Share on Facebook" src="https://user-images.githubusercontent.com/50652676/62817743-4f64cb80-bb59-11e9-90c7-b057252ded50.png" />
 </a>
-<a href='https://www.linkedin.com/shareArticle?mini=true&title=Terraform+DigitalOcean+Firewall&url=https://github.com/clouddrove/terraform-digitalocean-firewall'>
+<a href='https://www.linkedin.com/shareArticle?mini=true&title=Terraform+DigitalOcean+Firewall&url=https://github.com/terraform-do-modules/terraform-digitalocean-firewall'>
   <img title="Share on LinkedIn" src="https://user-images.githubusercontent.com/50652676/62817742-4e339e80-bb59-11e9-87b9-a1f68cae1049.png" />
 </a>
-<a href='https://twitter.com/intent/tweet/?text=Terraform+DigitalOcean+Firewall&url=https://github.com/clouddrove/terraform-digitalocean-firewall'>
+<a href='https://twitter.com/intent/tweet/?text=Terraform+DigitalOcean+Firewall&url=https://github.com/terraform-do-modules/terraform-digitalocean-firewall'>
   <img title="Share on Twitter" src="https://user-images.githubusercontent.com/50652676/62817740-4c69db00-bb59-11e9-8a79-3580fbbf6d5c.png" />
 </a>
 
@@ -51,7 +51,7 @@ We have [*fifty plus terraform modules*][terraform_modules]. A few of them are c
 
 This module has a few dependencies: 
 
-- [Terraform 0.15](https://learn.hashicorp.com/terraform/getting-started/install.html)
+- [Terraform 1.x.x](https://learn.hashicorp.com/terraform/getting-started/install.html)
 - [Go](https://golang.org/doc/install)
 - [github.com/stretchr/testify/assert](https://github.com/stretchr/testify)
 - [github.com/gruntwork-io/terratest/modules/terraform](https://github.com/gruntwork-io/terratest)
@@ -65,22 +65,41 @@ This module has a few dependencies:
 ## Examples
 
 
-**IMPORTANT:** Since the `master` branch used in `source` varies based on new modifications, we suggest that you use the release versions [here](https://github.com/clouddrove/terraform-digitalocean-firewall/releases).
+**IMPORTANT:** Since the `master` branch used in `source` varies based on new modifications, we suggest that you use the release versions [here](https://github.com/terraform-do-modules/terraform-digitalocean-firewall/releases).
 
 
 ### Simple Example
 Here is an example of how you can use this module in your inventory structure:
 ```hcl
      module "firewall" {
-     source          = "terraform-do-modules/firewall/digitalocean"
-     version         = "0.15.0"
-     name            = "firewall"
-     environment     = "test"
-     label_order     = ["environment", "name"]
-     enable_firewall = true
-     allowed_ip      = ["0.0.0.0/0"]
-     allowed_ports   = [22, 80]
-     droplet_ids     = module.droplet.id
+     source             = "terraform-do-modules/firewall/digitalocean"
+     version            = "1.0.0"
+     name               = "app"
+     environment        = "test"
+     allowed_ip         = ["0.0.0.0/0"]
+     allowed_ports      = [22, 80]
+     droplet_ids        = []
+     kubernetes_ids     = []
+     load_balancer_uids = []
+     }
+```
+
+### databases firewall Example
+Here is an example of how you can use this module in your inventory structure:
+```hcl
+     module "firewall" {
+     source                     = "terraform-do-modules/firewall/digitalocean"
+     version                    = "1.0.0"
+     name                       = local.name
+     environment                = local.environment
+     database_firewall_enabled  = true
+     database_cluster_id        = ""
+     rules = [
+        {
+          type  = "ip_addr"
+          value = "192.168.1.1"
+        },
+      ]
      }
 ```
 
@@ -93,23 +112,33 @@ Here is an example of how you can use this module in your inventory structure:
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| allowed\_ip | List of allowed ip. | `list` | `[]` | no |
-| allowed\_ports | List of allowed ingress ports. | `list` | `[]` | no |
-| application | Application (e.g. `cd` or `clouddrove`). | `string` | `""` | no |
-| delimiter | Delimiter to be used between `organization`, `environment`, `name` and `attributes`. | `string` | `"-"` | no |
-| droplet\_ids | The ID of the VPC that the instance security group belongs to. | `list` | `[]` | no |
-| enable\_firewall | Enable default Security Group with only Egress traffic allowed. | `bool` | `true` | no |
+| allowed\_ip | List of allowed ip. | `list(any)` | `[]` | no |
+| allowed\_ports | List of allowed ingress ports. | `list(any)` | `[]` | no |
+| database\_cluster\_id | The ID of the target database cluster. | `string` | `null` | no |
+| droplet\_ids | The ID of the VPC that the instance security group belongs to. | `list(any)` | `[]` | no |
+| enabled | Flag to control the firewall creation. | `bool` | `true` | no |
 | environment | Environment (e.g. `prod`, `dev`, `staging`). | `string` | `""` | no |
-| label\_order | Label order, e.g. `name`,`application`. | `list` | `[]` | no |
+| kubernetes\_ids | The ID of the VPC that the kubernetes security group belongs to. | `list(any)` | `[]` | no |
+| label\_order | Label order, e.g. `name`,`application`. | `list(any)` | <pre>[<br>  "name",<br>  "environment"<br>]</pre> | no |
+| load\_balancer\_uids | The ID of the VPC that the load\_balancer security group belongs to. | `list(any)` | `[]` | no |
+| managedby | ManagedBy, eg 'terraform-do-modules' or 'hello@clouddrove.com' | `string` | `"terraform-do-modules"` | no |
 | name | Name  (e.g. `app` or `cluster`). | `string` | `""` | no |
+| outbound\_rule | List of objects that represent the configuration of each outbound rule. | <pre>list(object({<br>    protocol              = string<br>    port_range            = string<br>    destination_addresses = list(string)<br>  }))</pre> | <pre>[<br>  {<br>    "destination_addresses": [<br>      "0.0.0.0/0",<br>      "::/0"<br>    ],<br>    "destination_droplet_ids": [],<br>    "port_range": "1-65535",<br>    "protocol": "tcp"<br>  },<br>  {<br>    "destination_addresses": [<br>      "0.0.0.0/0",<br>      "::/0"<br>    ],<br>    "port_range": "1-65535",<br>    "protocol": "udp"<br>  }<br>]</pre> | no |
 | protocol | The protocol. If not icmp, tcp, udp, or all use the. | `string` | `"tcp"` | no |
+| rules | List of objects that represent the configuration of each inbound rule. | `any` | `[]` | no |
+| tags | An array containing the names of Tags corresponding to groups of Droplets from which the inbound traffic will be accepted. | `list(any)` | `[]` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
+| cluster\_id | The ID of the target database cluster. |
+| database\_uuid | A unique identifier for the firewall rule. |
+| droplet\_ids | The list of the IDs of the Droplets assigned to the Firewall. |
 | id | A unique ID that can be used to identify and reference a Firewall. |
+| inbound\_rule | The inbound access rule block for the Firewall. |
 | name | The name of the Firewall. |
+| outbound\_rule | The name of the Firewall. |
 
 
 
@@ -125,9 +154,9 @@ You need to run the following command in the testing folder:
 
 
 ## Feedback 
-If you come accross a bug or have any feedback, please log it in our [issue tracker](https://github.com/clouddrove/terraform-digitalocean-firewall/issues), or feel free to drop us an email at [hello@clouddrove.com](mailto:hello@clouddrove.com).
+If you come accross a bug or have any feedback, please log it in our [issue tracker](https://github.com/terraform-do-modules/terraform-digitalocean-firewall/issues), or feel free to drop us an email at [hello@clouddrove.com](mailto:hello@clouddrove.com).
 
-If you have found it worth your time, go ahead and give us a ★ on [our GitHub](https://github.com/clouddrove/terraform-digitalocean-firewall)!
+If you have found it worth your time, go ahead and give us a ★ on [our GitHub](https://github.com/terraform-do-modules/terraform-digitalocean-firewall)!
 
 ## About us
 

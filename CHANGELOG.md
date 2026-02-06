@@ -1,3 +1,17 @@
+## [1.0.2] - 2026-02-06
+
+### Changes
+- ⬆️ upgrade: update examples to use provider >= 2.70.0
+- ⬆️ Upgrade provider & standardize workflows
+- 📝 Update CHANGELOG for v1.0.1
+- chore: update Terraform version requirement to >= 1.5.4
+- Merge pull request #6 from terraform-do-modules/fix/workflow
+- fix: updated tf_checks.yml
+- fix: updated checkov.yml
+- fix: updated workflow & complete example.tf
+- chore: standardize GitHub Actions workflows and fix code issues
+- update README.md
+
 # Changelog
 All notable changes to this project will be documented in this file.
 
